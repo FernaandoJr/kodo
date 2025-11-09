@@ -18,9 +18,11 @@
 		"test:unit": "vitest src"
 	},
 	"dependencies": {
+		"@radix-ui/react-slot": "^1.2.4",
 		"@tailwindcss/vite": "^4.1.17",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
+		"electron-store": "^11.0.2",
 		"lucide-react": "^0.553.0",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
