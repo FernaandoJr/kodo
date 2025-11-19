@@ -1,5 +1,5 @@
+import { FileText, Video } from "lucide-react"
 import { useState } from "react"
-import { Video, FileText } from "lucide-react"
 import MarkdownReader from "./components/MarkdownReader"
 import ScreenRecorder from "./components/ScreenRecorder"
 
@@ -11,7 +11,9 @@ function App() {
 	return (
 		<div className="flex h-screen bg-background text-foreground">
 			<aside className="w-64 border-r border-border bg-card p-4">
-				<h1 className="text-xl font-semibold mb-8 text-foreground">Kodo</h1>
+				<h1 className="text-xl font-semibold mb-8 text-foreground">
+					Kodo
+				</h1>
 				<nav className="space-y-1">
 					<button
 						onClick={() => setCurrentView("recorder")}

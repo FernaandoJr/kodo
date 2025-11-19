@@ -5,10 +5,9 @@ import RecordingControls from "./ScreenRecorder/RecordingControls"
 import SourceSelector from "./ScreenRecorder/SourceSelector"
 import VideoPreview from "./ScreenRecorder/VideoPreview"
 
+// Flexible video constraints that adapt to the source aspect ratio
 const VIDEO_CONSTRAINTS = {
-	minWidth: 1280,
 	maxWidth: 1920,
-	minHeight: 720,
 	maxHeight: 1080,
 } as const
 
@@ -91,6 +90,13 @@ const ScreenRecorder: React.FC = () => {
 		}
 	}, [isRecording])
 
+	// Notify main process about recording state changes
+	useEffect(() => {
+		if (window.electronAPI) {
+			window.electronAPI.updateRecordingState(isRecording)
+		}
+	}, [isRecording])
+
 	useEffect(() => {
 		const video = videoRef.current
 		if (!video || !streamRef.current) return
@@ -146,8 +152,11 @@ const ScreenRecorder: React.FC = () => {
 						mandatory: {
 							chromeMediaSource: "desktop",
 							chromeMediaSourceId: sourceId,
-							...VIDEO_CONSTRAINTS,
 						},
+						optional: [
+							{ maxWidth: VIDEO_CONSTRAINTS.maxWidth },
+							{ maxHeight: VIDEO_CONSTRAINTS.maxHeight },
+						],
 					},
 				} as unknown as MediaStreamConstraints
 
@@ -214,16 +223,53 @@ const ScreenRecorder: React.FC = () => {
 			}
 		}
 
-		mediaRecorder.onstop = () => {
+		mediaRecorder.onstop = async () => {
 			const blob = new Blob(chunksRef.current, {
 				type: mimeType || "video/webm",
 			})
-			const url = URL.createObjectURL(blob)
-			const a = document.createElement("a")
-			a.href = url
-			a.download = `recording-${Date.now()}.webm`
-			a.click()
-			URL.revokeObjectURL(url)
+
+			// Convert blob to array buffer and send to main process
+			if (window.electronAPI) {
+				try {
+					const arrayBuffer = await blob.arrayBuffer()
+					const uint8Array = new Uint8Array(arrayBuffer)
+					const result = await window.electronAPI.saveRecording(
+						uint8Array,
+						mimeType || "video/webm"
+					)
+
+					if (!result.success) {
+						console.error(
+							"Erro ao salvar gravação:",
+							result.message
+						)
+						// Fallback to browser download
+						const url = URL.createObjectURL(blob)
+						const a = document.createElement("a")
+						a.href = url
+						a.download = `recording-${Date.now()}.webm`
+						a.click()
+						URL.revokeObjectURL(url)
+					}
+				} catch (error) {
+					console.error("Erro ao processar gravação:", error)
+					// Fallback to browser download
+					const url = URL.createObjectURL(blob)
+					const a = document.createElement("a")
+					a.href = url
+					a.download = `recording-${Date.now()}.webm`
+					a.click()
+					URL.revokeObjectURL(url)
+				}
+			} else {
+				// Fallback if electronAPI is not available
+				const url = URL.createObjectURL(blob)
+				const a = document.createElement("a")
+				a.href = url
+				a.download = `recording-${Date.now()}.webm`
+				a.click()
+				URL.revokeObjectURL(url)
+			}
 		}
 
 		mediaRecorder.start()
@@ -289,7 +335,10 @@ const ScreenRecorder: React.FC = () => {
 						Preview
 					</h3>
 
-					<AudioToggle checked={recordAudio} onChange={setRecordAudio} />
+					<AudioToggle
+						checked={recordAudio}
+						onChange={setRecordAudio}
+					/>
 
 					<VideoPreview
 						videoRef={videoRef}

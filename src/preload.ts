@@ -31,4 +31,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
 			throw error
 		}
 	},
+	updateRecordingState: (isRecording: boolean) => {
+		ipcRenderer.send("recording-state-changed", isRecording)
+	},
+	saveRecording: async (buffer: Uint8Array, mimeType: string) => {
+		return await ipcRenderer.invoke("save-recording", buffer, mimeType)
+	},
 })

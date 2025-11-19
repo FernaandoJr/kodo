@@ -25,7 +25,9 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
 				/>
 			) : (
 				<div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-					<p className="text-sm">Selecione uma fonte para ver o preview</p>
+					<p className="text-sm">
+						Selecione uma fonte para ver o preview
+					</p>
 				</div>
 			)}
 
@@ -35,4 +37,3 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
 }
 
 export default VideoPreview
-

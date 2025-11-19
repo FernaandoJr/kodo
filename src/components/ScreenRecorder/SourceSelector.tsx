@@ -1,5 +1,5 @@
-import React from "react"
 import { RefreshCw } from "lucide-react"
+import React from "react"
 import type { DesktopSource } from "../../types/electron"
 import SourceItem from "./SourceItem"
 
@@ -19,8 +19,8 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
 	onRefresh,
 }) => {
 	return (
-		<div className="border border-border rounded-lg bg-card p-6 shadow-sm">
-			<div className="flex justify-between items-center mb-4">
+		<div className="border border-border rounded-lg bg-card p-6 shadow-sm flex flex-col h-full">
+			<div className="flex justify-between items-center mb-4 flex-shrink-0">
 				<h3 className="text-lg font-semibold text-foreground">
 					Selecionar Fonte
 				</h3>
@@ -35,12 +35,13 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
 				</button>
 			</div>
 
-			<div className="space-y-2 max-h-96 overflow-y-auto">
+			<div className="space-y-2 flex-1 overflow-y-auto min-h-0">
 				{sources.length === 0 && !isLoading && (
 					<div className="text-center py-8 text-muted-foreground">
 						<p className="mb-2 text-sm">Nenhuma fonte encontrada</p>
 						<p className="text-xs">
-							Clique em &quot;Atualizar&quot; para buscar novamente
+							Clique em &quot;Atualizar&quot; para buscar
+							novamente
 						</p>
 					</div>
 				)}
@@ -58,4 +59,3 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
 }
 
 export default SourceSelector
-

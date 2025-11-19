@@ -6,6 +6,8 @@ export interface DesktopSource {
 
 export interface ElectronAPI {
   getDesktopSources: () => Promise<DesktopSource[]>;
+  updateRecordingState: (isRecording: boolean) => void;
+  saveRecording: (buffer: Uint8Array, mimeType: string) => Promise<{ success: boolean; filePath?: string; fileName?: string; message?: string }>;
 }
 
 declare global {
