@@ -1,4 +1,4 @@
-import { RefreshCw } from "lucide-react"
+import { Monitor, RefreshCw } from "lucide-react"
 import React from "react"
 import type { DesktopSource } from "../../types/electron"
 import SourceItem from "./SourceItem"
@@ -19,29 +19,32 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
 	onRefresh,
 }) => {
 	return (
-		<div className="border border-border rounded-lg bg-card p-6 shadow-sm flex flex-col h-full">
+		<div className="border border-border rounded-2xl bg-card p-5 flex flex-col h-full">
 			<div className="flex justify-between items-center mb-4 flex-shrink-0">
-				<h3 className="text-lg font-semibold text-foreground">
-					Selecionar Fonte
-				</h3>
+				<div className="flex items-center gap-2">
+					<Monitor className="h-5 w-5 text-muted-foreground" />
+					<h3 className="text-base font-semibold text-foreground">
+						Fontes Disponíveis
+					</h3>
+				</div>
 				<button
 					onClick={onRefresh}
 					disabled={isLoading}
-					className="inline-flex items-center justify-center gap-2 rounded-md bg-secondary px-3 py-2 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 transition-colors disabled:opacity-50 disabled:pointer-events-none">
+					className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-3 py-2 text-xs font-medium text-secondary-foreground hover:bg-muted transition-all disabled:opacity-50">
 					<RefreshCw
-						className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+						className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`}
 					/>
-					{isLoading ? "Carregando..." : "Atualizar"}
+					{isLoading ? "..." : "Atualizar"}
 				</button>
 			</div>
 
-			<div className="space-y-2 flex-1 overflow-y-auto min-h-0">
+			<div className="space-y-2 flex-1 overflow-y-auto min-h-0 pr-1">
 				{sources.length === 0 && !isLoading && (
-					<div className="text-center py-8 text-muted-foreground">
-						<p className="mb-2 text-sm">Nenhuma fonte encontrada</p>
-						<p className="text-xs">
-							Clique em &quot;Atualizar&quot; para buscar
-							novamente
+					<div className="text-center py-12 text-muted-foreground">
+						<Monitor className="h-10 w-10 mx-auto mb-3 opacity-30" />
+						<p className="mb-1 text-sm font-medium">Nenhuma fonte encontrada</p>
+						<p className="text-xs opacity-70">
+							Clique em Atualizar para buscar
 						</p>
 					</div>
 				)}

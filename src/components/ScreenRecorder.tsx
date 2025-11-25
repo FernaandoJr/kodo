@@ -17,7 +17,13 @@ const MIME_TYPES = [
 	"video/webm",
 ] as const
 
-const ScreenRecorder: React.FC = () => {
+interface ScreenRecorderProps {
+	onRecordingStateChange?: (isRecording: boolean) => void
+}
+
+const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
+	onRecordingStateChange,
+}) => {
 	const [sources, setSources] = useState<DesktopSource[]>([])
 	const [selectedSource, setSelectedSource] = useState<DesktopSource | null>(
 		null
@@ -61,17 +67,35 @@ const ScreenRecorder: React.FC = () => {
 
 			const desktopSources = await window.electronAPI.getDesktopSources()
 			setSources(desktopSources)
+			return desktopSources
 		} catch (error) {
 			const message =
 				error instanceof Error ? error.message : String(error)
 			alert(`Erro ao carregar fontes: ${message}`)
+			return []
 		} finally {
 			setIsLoading(false)
 		}
 	}, [])
 
 	useEffect(() => {
-		loadSources()
+		const initSources = async () => {
+			const desktopSources = await loadSources()
+			// Auto-select the first screen (Entire Screen) on initial load
+			if (desktopSources && desktopSources.length > 0) {
+				const screenSource = desktopSources.find(
+					(source) =>
+						source.id.startsWith("screen:") ||
+						source.name.toLowerCase().includes("entire screen") ||
+						source.name.toLowerCase().includes("tela") ||
+						source.name.toLowerCase().includes("screen")
+				)
+				if (screenSource) {
+					setSelectedSource(screenSource)
+				}
+			}
+		}
+		initSources()
 		return stopAllStreams
 	}, [loadSources, stopAllStreams])
 
@@ -90,12 +114,13 @@ const ScreenRecorder: React.FC = () => {
 		}
 	}, [isRecording])
 
-	// Notify main process about recording state changes
+	// Notify main process and parent component about recording state changes
 	useEffect(() => {
 		if (window.electronAPI) {
 			window.electronAPI.updateRecordingState(isRecording)
 		}
-	}, [isRecording])
+		onRecordingStateChange?.(isRecording)
+	}, [isRecording, onRecordingStateChange])
 
 	useEffect(() => {
 		const video = videoRef.current
@@ -288,6 +313,23 @@ const ScreenRecorder: React.FC = () => {
 		setIsRecording(false)
 	}, [])
 
+	// Listen for global shortcut to toggle recording
+	useEffect(() => {
+		if (!window.electronAPI?.onShortcutTriggered) return
+
+		const cleanup = window.electronAPI.onShortcutTriggered((action) => {
+			if (action === "toggle-recording") {
+				if (isRecording) {
+					stopRecording()
+				} else if (selectedSource && streamRef.current) {
+					startRecording()
+				}
+			}
+		})
+
+		return cleanup
+	}, [isRecording, selectedSource, startRecording, stopRecording])
+
 	const stopCapture = useCallback(() => {
 		stopAllStreams()
 		if (isRecording) {
@@ -311,17 +353,19 @@ const ScreenRecorder: React.FC = () => {
 	)
 
 	return (
-		<div className="p-6 h-full flex flex-col">
+		<div className="flex flex-col h-full p-6">
+			{/* Header */}
 			<div className="mb-6">
-				<h2 className="text-2xl font-semibold mb-2 text-foreground">
+				<h2 className="mb-1 text-2xl font-bold text-foreground tracking-tight">
 					Gravador de Tela
 				</h2>
 				<p className="text-sm text-muted-foreground">
-					Selecione uma tela ou janela para gravar
+					Capture sua tela ou janela com facilidade
 				</p>
 			</div>
 
-			<div className="flex-1 grid grid-cols-2 gap-6">
+			{/* Content */}
+			<div className="grid flex-1 grid-cols-2 gap-5">
 				<SourceSelector
 					sources={sources}
 					selectedSource={selectedSource}
@@ -330,10 +374,18 @@ const ScreenRecorder: React.FC = () => {
 					onRefresh={loadSources}
 				/>
 
-				<div className="border border-border rounded-lg bg-card p-6 shadow-sm flex flex-col">
-					<h3 className="text-lg font-semibold mb-4 text-foreground">
-						Preview
-					</h3>
+				<div className="flex flex-col p-5 border-2 rounded-2xl border-border bg-card">
+					<div className="flex items-center justify-between mb-4">
+						<h3 className="text-base font-semibold text-foreground">
+							Preview & Controles
+						</h3>
+						{isRecording && (
+							<span className="flex items-center gap-2 text-xs font-medium text-red-500">
+								<span className="w-2 h-2 rounded-full bg-red-500 animate-recording" />
+								Gravando
+							</span>
+						)}
+					</div>
 
 					<AudioToggle
 						checked={recordAudio}

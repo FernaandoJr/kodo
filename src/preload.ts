@@ -37,4 +37,54 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	saveRecording: async (buffer: Uint8Array, mimeType: string) => {
 		return await ipcRenderer.invoke("save-recording", buffer, mimeType)
 	},
+
+	// Shortcuts API
+	getShortcuts: async () => {
+		return await ipcRenderer.invoke("get-shortcuts")
+	},
+	getDefaultShortcuts: async () => {
+		return await ipcRenderer.invoke("get-default-shortcuts")
+	},
+	updateShortcut: async (action: string, accelerator: string) => {
+		return await ipcRenderer.invoke("update-shortcut", action, accelerator)
+	},
+	resetShortcuts: async () => {
+		return await ipcRenderer.invoke("reset-shortcuts")
+	},
+	onShortcutTriggered: (callback: (action: string) => void) => {
+		const handler = (_event: Electron.IpcRendererEvent, action: string) => {
+			callback(action)
+		}
+		ipcRenderer.on("shortcut-triggered", handler)
+		// Return cleanup function
+		return () => {
+			ipcRenderer.removeListener("shortcut-triggered", handler)
+		}
+	},
+
+	// Window control API
+	windowMinimize: () => {
+		ipcRenderer.send("window-minimize")
+	},
+	windowMaximize: () => {
+		ipcRenderer.send("window-maximize")
+	},
+	windowClose: () => {
+		ipcRenderer.send("window-close")
+	},
+	windowIsMaximized: async () => {
+		return await ipcRenderer.invoke("window-is-maximized")
+	},
+	onWindowMaximized: (callback: (isMaximized: boolean) => void) => {
+		const handler = (
+			_event: Electron.IpcRendererEvent,
+			isMaximized: boolean
+		) => {
+			callback(isMaximized)
+		}
+		ipcRenderer.on("window-maximized", handler)
+		return () => {
+			ipcRenderer.removeListener("window-maximized", handler)
+		}
+	},
 })

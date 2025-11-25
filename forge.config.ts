@@ -15,6 +15,7 @@ import { preloadConfig } from './webpack.preload.config';
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
+    icon: './src/assets/icon.png',
   },
   rebuildConfig: {},
   makers: [
