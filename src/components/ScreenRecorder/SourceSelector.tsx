@@ -1,4 +1,4 @@
-import { Monitor, RefreshCw } from "lucide-react"
+import { Lock, Monitor, RefreshCw } from "lucide-react"
 import React from "react"
 import type { DesktopSource } from "../../types/electron"
 import SourceItem from "./SourceItem"
@@ -7,6 +7,7 @@ interface SourceSelectorProps {
 	sources: DesktopSource[]
 	selectedSource: DesktopSource | null
 	isLoading: boolean
+	isRecording: boolean
 	onSourceSelect: (source: DesktopSource) => void
 	onRefresh: () => void
 }
@@ -15,22 +16,29 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
 	sources,
 	selectedSource,
 	isLoading,
+	isRecording,
 	onSourceSelect,
 	onRefresh,
 }) => {
 	return (
-		<div className="border border-border rounded-2xl bg-card p-5 flex flex-col h-full">
+		<div className={`border-2 rounded-2xl bg-card p-5 flex flex-col h-full transition-all ${
+			isRecording ? "border-red-500/30 bg-red-500/5" : "border-border"
+		}`}>
 			<div className="flex justify-between items-center mb-4 flex-shrink-0">
 				<div className="flex items-center gap-2">
-					<Monitor className="h-5 w-5 text-muted-foreground" />
+					{isRecording ? (
+						<Lock className="h-5 w-5 text-red-400" />
+					) : (
+						<Monitor className="h-5 w-5 text-muted-foreground" />
+					)}
 					<h3 className="text-base font-semibold text-foreground">
-						Fontes Disponíveis
+						{isRecording ? "Fonte Bloqueada" : "Fontes Disponíveis"}
 					</h3>
 				</div>
 				<button
 					onClick={onRefresh}
-					disabled={isLoading}
-					className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-3 py-2 text-xs font-medium text-secondary-foreground hover:bg-muted transition-all disabled:opacity-50">
+					disabled={isLoading || isRecording}
+					className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-3 py-2 text-xs font-medium text-secondary-foreground hover:bg-muted transition-all disabled:opacity-50 disabled:cursor-not-allowed">
 					<RefreshCw
 						className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`}
 					/>
@@ -53,7 +61,8 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
 						key={source.id}
 						source={source}
 						isSelected={selectedSource?.id === source.id}
-						onClick={() => onSourceSelect(source)}
+						isDisabled={isRecording && selectedSource?.id !== source.id}
+						onClick={() => !isRecording && onSourceSelect(source)}
 					/>
 				))}
 			</div>

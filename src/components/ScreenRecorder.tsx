@@ -370,6 +370,7 @@ const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
 					sources={sources}
 					selectedSource={selectedSource}
 					isLoading={isLoading}
+					isRecording={isRecording}
 					onSourceSelect={handleSourceSelect}
 					onRefresh={loadSources}
 				/>

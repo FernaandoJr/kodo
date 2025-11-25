@@ -212,8 +212,20 @@ const createTray = (): void => {
 
 	const contextMenu = Menu.buildFromTemplate([
 		{
-			label: isRecording ? "Gravando..." : "Kodo",
+			label: "Kodo",
 			enabled: false,
+		},
+		{ type: "separator" },
+		{
+			label: "⏺ Iniciar Gravação",
+			click: () => {
+				if (mainWindow) {
+					mainWindow.webContents.send(
+						"shortcut-triggered",
+						"toggle-recording"
+					)
+				}
+			},
 		},
 		{ type: "separator" },
 		{
@@ -257,8 +269,20 @@ const updateTrayIcon = (recording: boolean): void => {
 	// Update context menu
 	const contextMenu = Menu.buildFromTemplate([
 		{
-			label: recording ? "Gravando..." : "Kodo",
+			label: recording ? "🔴 Gravando..." : "Kodo",
 			enabled: false,
+		},
+		{ type: "separator" },
+		{
+			label: recording ? "⏹ Parar Gravação" : "⏺ Iniciar Gravação",
+			click: () => {
+				if (mainWindow) {
+					mainWindow.webContents.send(
+						"shortcut-triggered",
+						"toggle-recording"
+					)
+				}
+			},
 		},
 		{ type: "separator" },
 		{

@@ -47,7 +47,7 @@ function App() {
 									? "bg-[hsl(var(--primary))] text-white shadow-lg glow-primary"
 									: "text-muted-foreground hover:bg-secondary hover:text-foreground"
 							}`}>
-							<Video className="h-5 w-5" />
+							<Video className="w-5 h-5" />
 							Gravador de Tela
 							{isRecording && (
 								<span className="ml-auto h-2.5 w-2.5 rounded-full bg-red-500 animate-recording shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
@@ -60,7 +60,7 @@ function App() {
 									? "bg-[hsl(var(--primary))] text-white shadow-lg glow-primary"
 									: "text-muted-foreground hover:bg-secondary hover:text-foreground"
 							}`}>
-							<Settings className="h-5 w-5" />
+							<Settings className="w-5 h-5" />
 							Configurações
 						</button>
 					</nav>
@@ -86,17 +86,17 @@ function App() {
 
 			{/* Recording Warning Modal */}
 			{showRecordingWarning && (
-				<div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-					<div className="bg-card border border-border rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
-						<div className="flex items-center gap-3 text-amber-500 mb-4">
-							<div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
-								<AlertTriangle className="h-5 w-5" />
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+					<div className="max-w-md p-6 mx-4 border shadow-2xl bg-card border-border rounded-2xl">
+						<div className="flex items-center gap-3 mb-4 text-amber-500">
+							<div className="flex items-center justify-center w-10 h-10 rounded-full bg-amber-500/10">
+								<AlertTriangle className="w-5 h-5" />
 							</div>
 							<h2 className="text-lg font-semibold text-foreground">
 								Gravação em Andamento
 							</h2>
 						</div>
-						<p className="text-muted-foreground mb-6 leading-relaxed">
+						<p className="mb-6 leading-relaxed text-muted-foreground">
 							Você está gravando a tela. Trocar de página irá
 							interromper a gravação. Por favor, pare a gravação
 							antes de continuar.
