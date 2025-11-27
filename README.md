@@ -27,6 +27,15 @@
 - 💾 **Salvamento Inteligente** - Escolha onde salvar seus vídeos
 - 🌙 **Design Moderno** - Interface clean com tema escuro e animações suaves
 
+## 👥 Participantes
+
+Este projeto foi desenvolvido por:
+
+- **Fernando Divino de Moraes Junior**
+- **Ian Camargo Ribeiro**
+- **Luis Felipe Piasentini**
+- **Marcus Vinicius**
+
 ## 🚀 Instalação
 
 ### Pré-requisitos
