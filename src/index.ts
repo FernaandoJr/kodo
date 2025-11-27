@@ -489,11 +489,6 @@ const createWindow = (): void => {
 	// and load the index.html of the app.
 	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 
-	// Open the DevTools in development
-	if (process.env.NODE_ENV === "development") {
-		mainWindow.webContents.openDevTools()
-	}
-
 	// Hide window on close instead of quitting (minimize to tray)
 	mainWindow.on("close", (event) => {
 		if (!appIsQuitting) {
