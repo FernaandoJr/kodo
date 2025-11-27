@@ -40,6 +40,7 @@ const DEFAULT_SHORTCUTS: ShortcutConfig[] = [
 
 let currentShortcuts: ShortcutConfig[] = []
 
+// File system helpers
 const getShortcutsFilePath = (): string => {
 	return path.join(app.getPath("userData"), "shortcuts.json")
 }
@@ -50,21 +51,26 @@ const loadShortcuts = (): ShortcutConfig[] => {
 		if (fs.existsSync(filePath)) {
 			const data = fs.readFileSync(filePath, "utf-8")
 			const settings: ShortcutsSettings = JSON.parse(data)
+			console.log("[Main] Shortcuts loaded successfully")
 			return settings.shortcuts
 		}
+		console.log("[Main] No shortcuts file found, using defaults")
 	} catch (error) {
 		console.error("[Main] Error loading shortcuts:", error)
 	}
 	return [...DEFAULT_SHORTCUTS]
 }
 
-const saveShortcuts = (shortcuts: ShortcutConfig[]): void => {
+const saveShortcuts = (shortcuts: ShortcutConfig[]): boolean => {
 	try {
 		const filePath = getShortcutsFilePath()
 		const settings: ShortcutsSettings = { shortcuts }
 		fs.writeFileSync(filePath, JSON.stringify(settings, null, 2))
+		console.log("[Main] Shortcuts saved successfully")
+		return true
 	} catch (error) {
 		console.error("[Main] Error saving shortcuts:", error)
+		return false
 	}
 }
 
@@ -142,7 +148,6 @@ if (require("electron-squirrel-startup")) {
 
 let tray: Tray | null = null
 let mainWindow: BrowserWindow | null = null
-let isRecording = false
 
 // Get the app icon path (for window and notifications)
 const getAppIconPath = (): string => {
@@ -262,7 +267,6 @@ const createTray = (): void => {
 
 const updateTrayIcon = (recording: boolean): void => {
 	if (!tray) return
-	isRecording = recording
 	const icon = createTrayIcon(recording)
 	tray.setImage(icon)
 

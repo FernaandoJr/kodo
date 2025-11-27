@@ -1,5 +1,6 @@
 import { Copy, Minus, Square, X } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
+import { APP_VERSION } from "../constants"
 import Logo from "./Logo"
 
 const TitleBar = () => {
@@ -42,7 +43,7 @@ const TitleBar = () => {
 					Kodo
 				</span>
 				<span className="text-[10px] text-muted-foreground px-1.5 py-0.5 bg-secondary rounded">
-					v1.0.0
+					v{APP_VERSION}
 				</span>
 			</div>
 

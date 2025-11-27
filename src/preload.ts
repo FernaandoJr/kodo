@@ -5,14 +5,14 @@ import { contextBridge, ipcRenderer } from "electron"
 contextBridge.exposeInMainWorld("electronAPI", {
 	getDesktopSources: async () => {
 		try {
-			console.log("[Preload] Buscando fontes de desktop via IPC...")
+			console.log("[Preload] Fetching desktop sources via IPC...")
 
 			// Call the main process via IPC
 			const sources = await ipcRenderer.invoke("get-desktop-sources", {
 				types: ["window", "screen"],
 			})
 
-			console.log("[Preload] Fontes encontradas:", sources.length)
+			console.log(`[Preload] Found ${sources.length} sources`)
 
 			// Map sources to the format expected by the renderer
 			return sources.map(
@@ -27,14 +27,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
 				})
 			)
 		} catch (error) {
-			console.error("[Preload] Erro ao buscar fontes:", error)
+			console.error("[Preload] Error fetching sources:", error)
 			throw error
 		}
 	},
 	updateRecordingState: (isRecording: boolean) => {
+		console.log(`[Preload] Recording state: ${isRecording}`)
 		ipcRenderer.send("recording-state-changed", isRecording)
 	},
 	saveRecording: async (buffer: Uint8Array, mimeType: string) => {
+		console.log(`[Preload] Saving recording (${buffer.length} bytes, ${mimeType})`)
 		return await ipcRenderer.invoke("save-recording", buffer, mimeType)
 	},
 

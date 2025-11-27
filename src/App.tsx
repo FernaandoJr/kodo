@@ -10,12 +10,10 @@ function App() {
 	const [currentView, setCurrentView] = useState<View>("recorder")
 	const [isRecording, setIsRecording] = useState(false)
 	const [showRecordingWarning, setShowRecordingWarning] = useState(false)
-	const [pendingView, setPendingView] = useState<View | null>(null)
 
 	const handleViewChange = useCallback(
 		(view: View) => {
 			if (isRecording && view !== "recorder") {
-				setPendingView(view)
 				setShowRecordingWarning(true)
 			} else {
 				setCurrentView(view)
@@ -26,7 +24,6 @@ function App() {
 
 	const handleDismissWarning = useCallback(() => {
 		setShowRecordingWarning(false)
-		setPendingView(null)
 	}, [])
 
 	return (

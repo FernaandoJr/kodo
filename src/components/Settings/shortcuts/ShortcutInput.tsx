@@ -1,35 +1,12 @@
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
+import { KEY_MAP, MODIFIER_KEYS } from "../../../constants"
+import { formatAccelerator } from "../../../utils"
 
 interface ShortcutInputProps {
 	value: string
 	onChange: (accelerator: string) => void
 	onCancel: () => void
 	isEditing: boolean
-}
-
-// Map key codes to Electron accelerator format
-const keyMap: Record<string, string> = {
-	Control: "CommandOrControl",
-	Meta: "CommandOrControl",
-	Alt: "Alt",
-	Shift: "Shift",
-	ArrowUp: "Up",
-	ArrowDown: "Down",
-	ArrowLeft: "Left",
-	ArrowRight: "Right",
-	Escape: "Escape",
-	Enter: "Enter",
-	Backspace: "Backspace",
-	Delete: "Delete",
-	Tab: "Tab",
-	Space: "Space",
-	" ": "Space",
-}
-
-const formatAccelerator = (accelerator: string): string => {
-	return accelerator
-		.replace(/CommandOrControl/g, "Ctrl")
-		.replace(/\+/g, " + ")
 }
 
 const ShortcutInput = ({
@@ -69,17 +46,16 @@ const ShortcutInput = ({
 
 		// Add the main key (if not just a modifier)
 		if (!["Control", "Meta", "Alt", "Shift"].includes(key)) {
-			const mappedKey = keyMap[key] || key.toUpperCase()
+			const mappedKey = KEY_MAP[key] || key.toUpperCase()
 			newKeys.add(mappedKey)
 		}
 
 		setKeys(newKeys)
 
 		// Build accelerator string
-		const modifiers = ["CommandOrControl", "Alt", "Shift"]
 		const parts: string[] = []
 
-		modifiers.forEach((mod) => {
+		MODIFIER_KEYS.forEach((mod) => {
 			if (newKeys.has(mod)) {
 				parts.push(mod)
 			}
@@ -87,7 +63,7 @@ const ShortcutInput = ({
 
 		// Add non-modifier keys
 		newKeys.forEach((k) => {
-			if (!modifiers.includes(k)) {
+			if (!MODIFIER_KEYS.includes(k as typeof MODIFIER_KEYS[number])) {
 				parts.push(k)
 			}
 		})
@@ -141,3 +117,4 @@ const ShortcutInput = ({
 }
 
 export default ShortcutInput
+

@@ -1,4 +1,4 @@
-import { Check, Circle } from "lucide-react"
+import { Circle } from "lucide-react"
 import React from "react"
 import type { DesktopSource } from "../../types/electron"
 

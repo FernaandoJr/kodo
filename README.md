@@ -77,9 +77,9 @@ npm run publish
 
 ## ⌨️ Atalhos de Teclado
 
-| Atalho | Ação |
-|--------|------|
-| `Ctrl+Shift+R` (ou `Cmd+Shift+R` no macOS) | Iniciar/Parar gravação |
+| Atalho                                     | Ação                    |
+| ------------------------------------------ | ----------------------- |
+| `Ctrl+Shift+R` (ou `Cmd+Shift+R` no macOS) | Iniciar/Parar gravação  |
 | `Ctrl+Shift+K` (ou `Cmd+Shift+K` no macOS) | Mostrar/Esconder janela |
 
 💡 **Nota:** Todos os atalhos podem ser personalizados nas configurações da aplicação!
@@ -97,16 +97,19 @@ npm run publish
 Este projeto foi construído com as seguintes tecnologias:
 
 ### Core
+
 - **[Electron](https://www.electronjs.org/)** - Framework para aplicações desktop
 - **[React](https://reactjs.org/)** - Biblioteca JavaScript para interfaces
 - **[TypeScript](https://www.typescriptlang.org/)** - JavaScript com tipagem estática
 
 ### UI/Styling
+
 - **[Tailwind CSS](https://tailwindcss.com/)** - Framework CSS utilitário
 - **[Lucide React](https://lucide.dev/)** - Ícones modernos e bonitos
 - **[Radix UI](https://www.radix-ui.com/)** - Componentes acessíveis
 
 ### Build Tools
+
 - **[Webpack](https://webpack.js.org/)** - Module bundler
 - **[Electron Forge](https://www.electronforge.io/)** - Ferramenta de build e deploy
 
@@ -158,6 +161,7 @@ kodo/
 ### Formatos de Vídeo Suportados
 
 Kodo usa o formato **WebM** para gravações, que oferece:
+
 - ✅ Ótima compressão
 - ✅ Alta qualidade
 - ✅ Compatibilidade com navegadores modernos
