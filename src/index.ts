@@ -152,8 +152,8 @@ let mainWindow: BrowserWindow | null = null
 // Get the app icon path (for window and notifications)
 const getAppIconPath = (): string => {
 	return app.isPackaged
-		? path.join(process.resourcesPath, "icon.png")
-		: path.join(__dirname, "../../src/assets/icon.png")
+		? path.join(process.resourcesPath, "icon.ico")
+		: path.join(__dirname, "../../src/assets/icon.ico")
 }
 
 // Get tray icon path based on recording state
@@ -474,8 +474,8 @@ const createWindow = (): void => {
 		titleBarStyle: "hidden",
 		autoHideMenuBar: true,
 		icon: app.isPackaged
-			? path.join(process.resourcesPath, "icon.png")
-			: path.join(__dirname, "../../src/assets/icon.png"),
+			? path.join(process.resourcesPath, "icon.ico")
+			: path.join(__dirname, "../../src/assets/icon.ico"),
 		webPreferences: {
 			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
 			nodeIntegration: false,
